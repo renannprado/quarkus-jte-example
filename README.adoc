@@ -1,0 +1,125 @@
+= https://quarkus.io/[Quarkus] + https://github.com/casid/jte[jte] Integration Example
+
+This repository is an attempt to integrate with Quarkus. Eventually we want to contribute the findings
+to Quarkus, jte, both or none; depending on what we find.
+
+You can access the active discussion here: https://github.com/casid/jte/issues/61
+
+== Status
+
+=== With jte template pre-compilation plugin
+
+Adding the plugin compiles the templates, however I still don't know how to integrate it with Quarkus.
+
+=== Without the jte plugin
+
+We're facing the below exception currently.
+
+```
+The stacktrace below has been reversed to show the root cause first. Click Here to see the original stacktrace
+
+gg.jte.TemplateException: Failed to compile template, error at example1.jte:1
+/home/user/development/private/quarkus-jte-example/target/jte-classes/gg/jte/generated/Jteexample1Generated.java:2: error: package org.acme does not exist
+import org.acme.GreetingResource;
+               ^
+/home/user/development/private/quarkus-jte-example/target/jte-classes/gg/jte/generated/Jteexample1Generated.java:6: error: package gg.jte.html does not exist
+	public static void render(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, GreetingResource src) {
+	                                     ^
+/home/user/development/private/quarkus-jte-example/target/jte-classes/gg/jte/generated/Jteexample1Generated.java:6: error: package gg.jte.html does not exist
+	public static void render(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, GreetingResource src) {
+	                                                                               ^
+/home/user/development/private/quarkus-jte-example/target/jte-classes/gg/jte/generated/Jteexample1Generated.java:6: error: cannot find symbol
+	public static void render(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, GreetingResource src) {
+	                                                                                                                    ^
+  symbol:   class GreetingResource
+  location: class Jteexample1Generated
+/home/user/development/private/quarkus-jte-example/target/jte-classes/gg/jte/generated/Jteexample1Generated.java:9: error: package gg.jte.html does not exist
+	public static void renderMap(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, java.util.Map<String, Object> params) {
+	                                        ^
+/home/user/development/private/quarkus-jte-example/target/jte-classes/gg/jte/generated/Jteexample1Generated.java:9: error: package gg.jte.html does not exist
+	public static void renderMap(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, java.util.Map<String, Object> params) {
+	                                                                                  ^
+6 errors
+
+	at gg.jte.compiler.ClassFilesCompiler.runCompiler(ClassFilesCompiler.java:43)
+	at gg.jte.compiler.ClassFilesCompiler.compile(ClassFilesCompiler.java:31)
+	at gg.jte.compiler.TemplateCompiler.precompile(TemplateCompiler.java:90)
+	at gg.jte.compiler.TemplateCompiler.load(TemplateCompiler.java:53)
+	at gg.jte.TemplateEngine.resolveTemplate(TemplateEngine.java:324)
+	at gg.jte.TemplateEngine.render(TemplateEngine.java:189)
+	at org.acme.GreetingResource.hello(GreetingResource.kt:29)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564)
+	at org.jboss.resteasy.core.MethodInjectorImpl.invoke(MethodInjectorImpl.java:170)
+	at org.jboss.resteasy.core.MethodInjectorImpl.invoke(MethodInjectorImpl.java:130)
+	at org.jboss.resteasy.core.ResourceMethodInvoker.internalInvokeOnTarget(ResourceMethodInvoker.java:643)
+	at org.jboss.resteasy.core.ResourceMethodInvoker.invokeOnTargetAfterFilter(ResourceMethodInvoker.java:507)
+	at org.jboss.resteasy.core.ResourceMethodInvoker.lambda$invokeOnTarget$2(ResourceMethodInvoker.java:457)
+	at org.jboss.resteasy.core.interception.jaxrs.PreMatchContainerRequestContext.filter(PreMatchContainerRequestContext.java:364)
+	at org.jboss.resteasy.core.ResourceMethodInvoker.invokeOnTarget(ResourceMethodInvoker.java:459)
+	at org.jboss.resteasy.core.ResourceMethodInvoker.invoke(ResourceMethodInvoker.java:419)
+	at org.jboss.resteasy.core.ResourceMethodInvoker.invoke(ResourceMethodInvoker.java:393)
+	at org.jboss.resteasy.core.ResourceMethodInvoker.invoke(ResourceMethodInvoker.java:68)
+	at org.jboss.resteasy.core.SynchronousDispatcher.invoke(SynchronousDispatcher.java:492)
+	at org.jboss.resteasy.core.SynchronousDispatcher.lambda$invoke$4(SynchronousDispatcher.java:261)
+	at org.jboss.resteasy.core.SynchronousDispatcher.lambda$preprocess$0(SynchronousDispatcher.java:161)
+	at org.jboss.resteasy.core.interception.jaxrs.PreMatchContainerRequestContext.filter(PreMatchContainerRequestContext.java:364)
+	at org.jboss.resteasy.core.SynchronousDispatcher.preprocess(SynchronousDispatcher.java:164)
+	at org.jboss.resteasy.core.SynchronousDispatcher.invoke(SynchronousDispatcher.java:247)
+	at io.quarkus.resteasy.runtime.standalone.RequestDispatcher.service(RequestDispatcher.java:73)
+	at io.quarkus.resteasy.runtime.standalone.VertxRequestHandler.dispatch(VertxRequestHandler.java:138)
+	at io.quarkus.resteasy.runtime.standalone.VertxRequestHandler.access$000(VertxRequestHandler.java:41)
+	at io.quarkus.resteasy.runtime.standalone.VertxRequestHandler$1.run(VertxRequestHandler.java:93)
+	at io.quarkus.runtime.CleanableExecutor$CleaningRunnable.run(CleanableExecutor.java:231)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at org.jboss.threads.EnhancedQueueExecutor$Task.run(EnhancedQueueExecutor.java:2415)
+	at org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1452)
+	at org.jboss.threads.DelegatingRunnable.run(DelegatingRunnable.java:29)
+	at org.jboss.threads.ThreadLocalResettingRunnable.run(ThreadLocalResettingRunnable.java:29)
+	at java.base/java.lang.Thread.run(Thread.java:832)
+	at org.jboss.threads.JBossThread.run(JBossThread.java:501)
+Resulted in: org.jboss.resteasy.spi.UnhandledException: gg.jte.TemplateException: Failed to compile template, error at example1.jte:1
+/home/user/development/private/quarkus-jte-example/target/jte-classes/gg/jte/generated/Jteexample1Generated.java:2: error: package org.acme does not exist
+import org.acme.GreetingResource;
+               ^
+/home/user/development/private/quarkus-jte-example/target/jte-classes/gg/jte/generated/Jteexample1Generated.java:6: error: package gg.jte.html does not exist
+	public static void render(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, GreetingResource src) {
+	                                     ^
+/home/user/development/private/quarkus-jte-example/target/jte-classes/gg/jte/generated/Jteexample1Generated.java:6: error: package gg.jte.html does not exist
+	public static void render(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, GreetingResource src) {
+	                                                                               ^
+/home/user/development/private/quarkus-jte-example/target/jte-classes/gg/jte/generated/Jteexample1Generated.java:6: error: cannot find symbol
+	public static void render(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, GreetingResource src) {
+	                                                                                                                    ^
+  symbol:   class GreetingResource
+  location: class Jteexample1Generated
+/home/user/development/private/quarkus-jte-example/target/jte-classes/gg/jte/generated/Jteexample1Generated.java:9: error: package gg.jte.html does not exist
+	public static void renderMap(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, java.util.Map<String, Object> params) {
+	                                        ^
+/home/user/development/private/quarkus-jte-example/target/jte-classes/gg/jte/generated/Jteexample1Generated.java:9: error: package gg.jte.html does not exist
+	public static void renderMap(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, java.util.Map<String, Object> params) {
+	                                                                                  ^
+6 errors
+
+	at org.jboss.resteasy.core.ExceptionHandler.handleApplicationException(ExceptionHandler.java:106)
+	at org.jboss.resteasy.core.ExceptionHandler.handleException(ExceptionHandler.java:372)
+	at org.jboss.resteasy.core.SynchronousDispatcher.writeException(SynchronousDispatcher.java:218)
+	at org.jboss.resteasy.core.SynchronousDispatcher.invoke(SynchronousDispatcher.java:519)
+	... 18 more
+```
+
+Still trying to figure out how/if we can benefit from the
+https://github.com/vert-x3/vertx-web/tree/master/vertx-template-engines/vertx-web-templ-jte[jte template implementation in vertx]
+
+== Running
+
+```shell
+./mvnw compile quarkus:dev
+```
+
+== Reproducing error
+
+Just go to http://localhost:8080/test
