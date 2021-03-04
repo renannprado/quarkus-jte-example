@@ -9,6 +9,13 @@ import java.io.File;
 
 @ConfigRoot(phase = ConfigPhase.BUILD_AND_RUN_TIME_FIXED)
 public class JteConfiguration {
+
+    public static JteConfiguration INSTANCE;
+
+    public JteConfiguration() {
+        INSTANCE = this;
+    }
+
     /**
      * The directory where template files are located
      */

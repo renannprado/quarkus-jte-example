@@ -10,7 +10,6 @@ import io.quarkus.deployment.CodeGenContext;
 import io.quarkus.deployment.CodeGenProvider;
 import io.quarkus.runtime.LaunchMode;
 
-import javax.inject.Inject;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
@@ -42,10 +41,10 @@ public class JteCodeGenProvider implements CodeGenProvider {
             determineHotReloadProperties(context);
             return false;
         } else {
-            // TODO how to access config for content type and other settings?
+            JteConfiguration configuration = JteConfiguration.INSTANCE;
 
             CodeResolver codeResolver = new DirectoryCodeResolver(context.inputDir());
-            TemplateEngine templateEngine = TemplateEngine.create(codeResolver, context.outDir(), ContentType.Html, null, Constants.PACKAGE_NAME_PRECOMPILED);
+            TemplateEngine templateEngine = TemplateEngine.create(codeResolver, context.outDir(), ContentType.valueOf(configuration.contentType), null, Constants.PACKAGE_NAME_PRECOMPILED);
 
             List<String> sources = templateEngine.generateAll();
 
