@@ -19,7 +19,7 @@
     <quarkus.platform.version>1.11.3.Final</quarkus.platform.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
-    <jte.version>1.7.0</jte.version>
+    <jte.version>1.8.1-SNAPSHOT</jte.version>
     <skipTests>true</skipTests>
   </properties>
   <dependencyManagement>
@@ -34,6 +34,10 @@
     </dependencies>
   </dependencyManagement>
   <dependencies>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-core-deployment</artifactId>
+    </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-elasticsearch-rest-high-level-client</artifactId>
