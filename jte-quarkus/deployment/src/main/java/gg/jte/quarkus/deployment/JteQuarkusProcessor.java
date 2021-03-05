@@ -27,6 +27,8 @@ public class JteQuarkusProcessor {
     @BuildStep(onlyIfNot = IsDevMode.class)
     public void enablePrecompiledTemplates(BuildProducer<AdditionalBeanBuildItem> beans) {
         beans.produce(new AdditionalBeanBuildItem(JteTemplateRendererPrecompiledProvider.class));
+
+        // TODO precompile templates and add as build items
     }
 
     static class IsDevMode implements BooleanSupplier {

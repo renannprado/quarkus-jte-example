@@ -21,8 +21,11 @@ public class JteQuarkusDevModeTest {
     // Start hot reload (DevMode) test with your extension loaded
     @RegisterExtension
     static final QuarkusDevModeTest test = new QuarkusDevModeTest()
-            .setArchiveProducer(() -> ShrinkWrap.create(JavaArchive.class).addClass(GreetingResource.class)
-            );
+            .setArchiveProducer(() -> {
+                JavaArchive javaArchive = ShrinkWrap.create(JavaArchive.class);
+                javaArchive.addClass("gg.jte.quarkus.test.GreetingResource");
+                return javaArchive;
+            });
 
     private static Field deploymentSourcePath;
 
