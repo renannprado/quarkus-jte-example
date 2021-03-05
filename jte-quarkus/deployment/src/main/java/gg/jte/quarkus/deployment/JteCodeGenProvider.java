@@ -1,19 +1,12 @@
 package gg.jte.quarkus.deployment;
 
-import gg.jte.CodeResolver;
-import gg.jte.ContentType;
-import gg.jte.TemplateEngine;
 import gg.jte.quarkus.runtime.JteTemplateRenderer;
-import gg.jte.resolve.DirectoryCodeResolver;
-import gg.jte.runtime.Constants;
 import io.quarkus.bootstrap.model.AppDependency;
 import io.quarkus.deployment.CodeGenContext;
 import io.quarkus.deployment.CodeGenProvider;
-import io.quarkus.runtime.LaunchMode;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.List;
 
 public class JteCodeGenProvider implements CodeGenProvider {
 
