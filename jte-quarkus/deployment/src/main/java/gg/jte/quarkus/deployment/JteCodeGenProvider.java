@@ -40,14 +40,22 @@ public class JteCodeGenProvider implements CodeGenProvider {
         StringBuilder classPath = new StringBuilder(512);
         for (AppDependency userDependency : context.appModel().getUserDependencies()) {
             for (Path path : userDependency.getArtifact().getPaths()) {
-                if (classPath.length() > 0) {
-                    classPath.append(File.pathSeparatorChar);
-                }
-                classPath.append(path.toAbsolutePath().toString());
+                appendPath(classPath, path);
             }
+        }
+
+        for (Path path : context.appModel().getAppArtifact().getPaths()) {
+            appendPath(classPath, path);
         }
 
         System.setProperty(JteTemplateRenderer.JTE_QUARKUS_CLASS_PATH, classPath.toString());
         System.setProperty(JteTemplateRenderer.JTE_QUARKUS_SOURCE_DIR, context.inputDir().toAbsolutePath().toString());
+    }
+
+    private void appendPath(StringBuilder classPath, Path path) {
+        if (classPath.length() > 0) {
+            classPath.append(File.pathSeparatorChar);
+        }
+        classPath.append(path.toAbsolutePath().toString());
     }
 }
