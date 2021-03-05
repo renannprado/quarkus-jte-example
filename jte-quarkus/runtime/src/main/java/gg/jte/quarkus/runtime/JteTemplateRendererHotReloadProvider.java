@@ -16,15 +16,13 @@ public class JteTemplateRendererHotReloadProvider {
 
     @Produces
     @ApplicationScoped
-    public TemplateRenderer templateRenderer() {
+    public TemplateRenderer templateRenderer(JteConfiguration configuration) {
         String classPath = System.getProperty(JteTemplateRenderer.JTE_QUARKUS_CLASS_PATH);
         String sourceDir = System.getProperty(JteTemplateRenderer.JTE_QUARKUS_SOURCE_DIR);
 
         if (classPath == null) {
             throw new IllegalStateException(JteTemplateRenderer.JTE_QUARKUS_CLASS_PATH + " not found, template engine cannot be created :-(");
         }
-
-        JteConfiguration configuration = JteConfiguration.INSTANCE;
 
         DirectoryCodeResolver codeResolver = new DirectoryCodeResolver(Paths.get(sourceDir));
 
