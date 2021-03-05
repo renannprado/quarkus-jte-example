@@ -1,9 +1,9 @@
-package gg.jte.quarkus.deployment;
+package gg.jte.quarkus.runtime;
 
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
-import gg.jte.quarkus.runtime.TemplateRenderer;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Singleton;
 
@@ -11,8 +11,9 @@ import javax.inject.Singleton;
 public class JteTemplateRendererPrecompiledProvider {
 
     @Produces
+    @ApplicationScoped
     public TemplateRenderer templateRenderer(JteConfiguration configuration) {
         TemplateEngine templateEngine = TemplateEngine.createPrecompiled(ContentType.valueOf(configuration.contentType));
-        return new TemplateRenderer(templateEngine);
+        return new JteTemplateRenderer(templateEngine);
     }
 }

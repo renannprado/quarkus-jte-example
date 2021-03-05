@@ -1,5 +1,6 @@
 package gg.jte.quarkus.test;
 
+import gg.jte.quarkus.runtime.JteConfiguration;
 import gg.jte.quarkus.runtime.TemplateRenderer;
 
 import javax.inject.Inject;
@@ -12,12 +13,15 @@ import java.util.Collections;
 @Path("/test")
 public class GreetingResource {
 
+    //@Inject
+    //TemplateRenderer templateRenderer;
     @Inject
-    TemplateRenderer templateRenderer;
+    JteConfiguration configuration;
 
     @GET
     @Produces(MediaType.TEXT_HTML)
     public String render() {
-        return templateRenderer.render("hello.jte", Collections.emptyMap());
+        //return templateRenderer.render("hello.jte", Collections.emptyMap());
+        return "foo";
     }
 }

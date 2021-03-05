@@ -3,6 +3,7 @@ package gg.jte.quarkus.deployment;
 import gg.jte.CodeResolver;
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
+import gg.jte.quarkus.runtime.JteTemplateRenderer;
 import gg.jte.resolve.DirectoryCodeResolver;
 import gg.jte.runtime.Constants;
 import io.quarkus.bootstrap.model.AppDependency;
@@ -13,9 +14,6 @@ import io.quarkus.runtime.LaunchMode;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
-
-import static gg.jte.quarkus.runtime.TemplateRenderer.CLASS_PATH_HACK;
-import static gg.jte.quarkus.runtime.TemplateRenderer.SOURCE_DIR_HACK;
 
 public class JteCodeGenProvider implements CodeGenProvider {
 
@@ -37,23 +35,12 @@ public class JteCodeGenProvider implements CodeGenProvider {
 
     @Override
     public boolean trigger(CodeGenContext context) {
-        if (LaunchMode.current() == LaunchMode.DEVELOPMENT) {
-            determineHotReloadProperties(context);
-            return false;
-        } else {
-            JteConfiguration configuration = JteConfiguration.INSTANCE;
-
-            CodeResolver codeResolver = new DirectoryCodeResolver(context.inputDir());
-            TemplateEngine templateEngine = TemplateEngine.create(codeResolver, context.outDir(), ContentType.valueOf(configuration.contentType), null, Constants.PACKAGE_NAME_PRECOMPILED);
-
-            List<String> sources = templateEngine.generateAll();
-
-            return !sources.isEmpty();
-        }
+        determineHotReloadProperties(context);
+        return false;
     }
 
     private void determineHotReloadProperties(CodeGenContext context) {
-        if (System.getProperty(CLASS_PATH_HACK) != null && System.getProperty(SOURCE_DIR_HACK) != null) {
+        if (System.getProperty(JteTemplateRenderer.JTE_QUARKUS_CLASS_PATH) != null && System.getProperty(JteTemplateRenderer.JTE_QUARKUS_SOURCE_DIR) != null) {
             return;
         }
 
@@ -67,7 +54,7 @@ public class JteCodeGenProvider implements CodeGenProvider {
             }
         }
 
-        System.setProperty(CLASS_PATH_HACK, classPath.toString());
-        System.setProperty(SOURCE_DIR_HACK, context.inputDir().toAbsolutePath().toString());
+        System.setProperty(JteTemplateRenderer.JTE_QUARKUS_CLASS_PATH, classPath.toString());
+        System.setProperty(JteTemplateRenderer.JTE_QUARKUS_SOURCE_DIR, context.inputDir().toAbsolutePath().toString());
     }
 }

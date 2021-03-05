@@ -1,10 +1,10 @@
-package gg.jte.quarkus.deployment;
+package gg.jte.quarkus.runtime;
 
 import gg.jte.ContentType;
 import gg.jte.TemplateEngine;
-import gg.jte.quarkus.runtime.TemplateRenderer;
 import gg.jte.resolve.DirectoryCodeResolver;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Singleton;
 import java.io.File;
@@ -15,19 +15,22 @@ import java.util.Arrays;
 public class JteTemplateRendererHotReloadProvider {
 
     @Produces
-    public TemplateRenderer templateRenderer(JteConfiguration configuration) {
-        String classPath = System.getProperty(TemplateRenderer.CLASS_PATH_HACK);
-        String sourceDir = System.getProperty(TemplateRenderer.SOURCE_DIR_HACK);
+    @ApplicationScoped
+    public TemplateRenderer templateRenderer() {
+        String classPath = System.getProperty(JteTemplateRenderer.JTE_QUARKUS_CLASS_PATH);
+        String sourceDir = System.getProperty(JteTemplateRenderer.JTE_QUARKUS_SOURCE_DIR);
 
         if (classPath == null) {
-            throw new IllegalStateException("QUARKUS_CLASS_PATH_HACK not found, template engine cannot be created :-(");
+            throw new IllegalStateException(JteTemplateRenderer.JTE_QUARKUS_CLASS_PATH + " not found, template engine cannot be created :-(");
         }
+
+        JteConfiguration configuration = JteConfiguration.INSTANCE;
 
         DirectoryCodeResolver codeResolver = new DirectoryCodeResolver(Paths.get(sourceDir));
 
         TemplateEngine templateEngine = TemplateEngine.create(codeResolver, Paths.get("target", "jte-classes"), ContentType.valueOf(configuration.contentType), getClass().getClassLoader());
         templateEngine.setClassPath(Arrays.asList(classPath.split(File.pathSeparator)));
 
-        return new TemplateRenderer(templateEngine);
+        return new JteTemplateRenderer(templateEngine);
     }
 }
