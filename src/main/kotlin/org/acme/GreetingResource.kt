@@ -1,13 +1,9 @@
 package org.acme
 
-import gg.jte.CodeResolver
-import gg.jte.ContentType
-import gg.jte.TemplateEngine
-import gg.jte.TemplateOutput
-import gg.jte.output.StringOutput
-import gg.jte.resolve.DirectoryCodeResolver
+import gg.jte.quarkus.runtime.JteConfiguration
+import gg.jte.quarkus.runtime.TemplateRenderer
 import io.fabric8.kubernetes.client.KubernetesClient
-import java.nio.file.Path
+import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
@@ -17,17 +13,15 @@ import javax.ws.rs.Path as HttpPath
 class GreetingResource(
         private val kubernetesClient: KubernetesClient
 ) {
+    @Inject
+    lateinit var templateRenderer:TemplateRenderer
+
+    @Inject
+    lateinit var config:JteConfiguration
 
     @GET
     @Produces(MediaType.TEXT_HTML)
     fun hello() : String {
-        val codeResolver: CodeResolver = DirectoryCodeResolver(Path.of("${System.getProperty("user.dir")}/classes/META-INF/resources")) // This is the directory where your .jte files are located.
-
-        val templateEngine: TemplateEngine = TemplateEngine.create(codeResolver, ContentType.Html)
-
-        val output: TemplateOutput = StringOutput()
-        templateEngine.render("example1.jte", mapOf(), output)
-
-        return output.toString()
+        return templateRenderer.render("example1.jte", mapOf("foo" to "bar2212"))
     }
 }
