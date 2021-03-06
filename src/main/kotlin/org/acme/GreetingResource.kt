@@ -7,17 +7,17 @@ import javax.inject.Inject
 import javax.ws.rs.GET
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
-import javax.ws.rs.Path as HttpPath
+import javax.ws.rs.Path
 
-@HttpPath("/test")
+@Path("/test")
 class GreetingResource(
         private val kubernetesClient: KubernetesClient
 ) {
     @Inject
-    lateinit var templateRenderer:TemplateRenderer
+    lateinit var templateRenderer: TemplateRenderer
 
     @Inject
-    lateinit var config:JteConfiguration
+    lateinit var config: JteConfiguration
 
     @GET
     @Produces(MediaType.TEXT_HTML)

@@ -1,14 +1,9 @@
-@import org.acme.GreetingResource
+@param String foo
 
-@param GreetingResource src
+Hello world!!!<br>
+Hello world!!!<br>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>code-with-quarkus - 1.0.0-SNAPSHOT</title>
-</head>
-<body>
-    <h3>jte running babe</h3>
-</body>
-</html>
+it is a ${foo}...<br>
+
+<br>
+The current time is ${System.currentTimeMillis()}

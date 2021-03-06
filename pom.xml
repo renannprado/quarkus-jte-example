@@ -20,6 +20,7 @@
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
     <surefire-plugin.version>3.0.0-M5</surefire-plugin.version>
     <skipTests>true</skipTests>
+    <jte.version>1.8.1-SNAPSHOT</jte.version>
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -161,6 +162,25 @@
             <option>all-open:annotation=io.quarkus.test.junit.QuarkusTest</option>
           </pluginOptions>
         </configuration>
+      </plugin>
+      <!--      jte plugin -->
+      <plugin>
+        <groupId>gg.jte</groupId>
+        <artifactId>jte-maven-plugin</artifactId>
+        <version>${jte.version}</version>
+        <configuration>
+          <sourceDirectory>src/main/resources/META-INF/resources</sourceDirectory> <!-- This is the directory where your .jte files are located. -->
+          <targetDirectory>target/jte-classes</targetDirectory> <!-- This is the directory where compiled templates are located. -->
+          <contentType>Html</contentType>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>process-classes</phase>
+            <goals>
+              <goal>precompile</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
