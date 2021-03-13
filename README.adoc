@@ -114,6 +114,8 @@ import org.acme.GreetingResource;
 Still trying to figure out how/if we can benefit from the
 https://github.com/vert-x3/vertx-web/tree/master/vertx-template-engines/vertx-web-templ-jte[jte template implementation in vertx]
 
+Could be helpful resource: https://github.com/vert-x3/vertx-web/pull/1868[PR changing jte sfuff in vert.x]
+
 == Running
 
 ```shell

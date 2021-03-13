@@ -1,0 +1,151 @@
+= E-commerce Backbone
+:toc: left
+
+.WIP
+****
+[.text-center]
+This ADR is still a work-in-progress.
+****
+
+*Deciders:* Zvonimir Buric, Andrii Bosenko, Michael Heilig, Carl-Johan Backman.
+
+== Context
+The replatforming of Magento 1 will not result in one new platform, but rather a plethora of purposefully built services. An architectural design pattern which today is commonly known as composable commerce. There are several benefits of taking that route, with one key benefit being that it enables innovation and quick adaptation to the rapidly changing e-commerce landscape.
+
+"By 2023, organizations that have adopted a composable approach will outpace the competition by 80% in the speed of new feature implementation."
+-- https://www.gartner.com/en/documents/3986490/composable-commerce-must-be-adopted-for-the-future-of-ap[Gartner]
+
+One essential part in the new landscape is the e-commerce backbone. In short, it is the part of the platform which is responsible for powering the storefronts, by managing eg products, promotions, shopping carts and the checkout.
+
+In this ADR we discuss the six shortlisted vendors that were evaluated https://dormandode.sharepoint.com/:x:/r/sites/Replatformingsquad/_layouts/15/Doc.aspx?sourcedoc=%7B6980E826-29CA-4514-A661-2754236BCEF4%7D&file=Software%20evaluation%20backbone.xlsx&action=default&mobileredirect=true[in greater detail]. For all vendors considered, please refer to https://dormandode.sharepoint.com/:w:/r/sites/Replatformingsquad/_layouts/15/Doc.aspx?sourcedoc=%7BB75E6E90-1715-43C8-965F-2C02DAF6DDED%7D&file=Long%20list%20backbone.docx&action=default&mobileredirect=true[the long list].
+
+=== Requirements
+The new e-commerce backbone must:
+
+* Performantly serve all of Emma's storefronts
+* Scale to support Emma's growth
+* Allow for a best-of-breed architecture
+* Be implementable in line with our timeline
+* Align with the vision for Emma's tech organisation
+* Empower countries to manage the customer experience for their respective markets
+
+=== Out-of-scope
+It also relevant to underline what the e-commerce backbone is not. It is not responsible for the order fulfillment. Orders originating from the storefront will be created in the backbone but the fulfillment of them will be done by the order management system.
+
+The backbone is not a CRM. It manages customer data, but in the context of providing a 360 degreee view of the customer the backbone will only be one out of many sources.
+
+The backbone is not responsible for billing and invoicing. The backbone must provide the necessary data, at the right time, in order to create invoices, but the actual creation will reside with finance.
+
+The backbone can manage VAT for simple use cases, but for advanced use cases which are present in some markets, eg USA and Brazil, VAT should be handled by an external service built for this, which is managed by finance.
+
+The backbone is not a content management system or a frontend. It powers the storefronts, meaning business logic is implemented in the backbone, however what and how to display content is handled by the storefronts.
+
+
+== Decision
+To be written.
+
+== Modular vs All-In-One Platform
+Pros
+
+* Reduces the risk of chosing the wrong software
+* Enables best-of-breed architecture with purposfully built services
+* Increases flexbility
+* Reduces depedency on external providers
+
+Cons
+
+* Increases complexity
+* Decreases speed of implementation
+
+== SaaS vs Open-Source
+
+Pros
+
+* Decreases operational complexity
+* Converts CapEx to OpEx
+
+Cons
+
+* Limits the control of core functionality
+* Increases vendor lock-in
+
+== Alternatives
+[plantuml]
+.... 
+@startuml(id=SystemLandscape)
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4.puml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+LAYOUT_WITH_LEGEND()
+
+title System Landscape
+caption The Online Shop
+
+Person(1, "Customer", "")
+Person(2, "Emmie", "")
+System(12, "API Gateway", "The entry point for the frontend to all things backend.")
+System(11, "API M1", "API interface exposing selected Magento functionality.")
+System(16, "BME", "")
+System(5, "Back-Office Apps", "Backends for back-office UI extensions.")
+System(8, "CMS", "")
+System(15, "CRM", "")
+System(3, "E-commerce Backbone", "Stores, customer accounts, carts, orders, promotions, back-office UI, etc.")
+System(14, "ERP", "")
+System(4, "Emma Services", "Business logic.")
+System(9, "Frontend", "")
+System(6, "Integration Services", "")
+System(10, "Magento", "")
+System(13, "OMS", "")
+System(7, "PIM", "")
+Rel_D(12, 11, "", "")
+Rel_D(12, 4, "", "")
+Rel_D(11, 10, "", "")
+Rel_D(8, 7, "Sync product data", "")
+Rel_D(1, 9, "Views and buys products", "")
+Rel_D(3, 5, "", "")
+Rel_D(3, 6, "", "")
+Rel_D(4, 3, "", "")
+Rel_D(2, 3, "View/edit orders, customers, promotions", "")
+Rel_D(9, 12, "", "")
+Rel_D(9, 8, "", "")
+Rel_D(6, 16, "Consume data for analytics", "")
+Rel_D(6, 15, "Sync customer data", "")
+Rel_D(6, 14, "Sync order data, trigger invoice creation", "")
+Rel_D(6, 13, "Sync order status/updates", "")
+Rel_D(6, 7, "Sync product data", "")
+@enduml
+....
+
+For the full list of all alternatives reviewed, please refer to https://dormandode.sharepoint.com/:w:/r/sites/Replatformingsquad/_layouts/15/Doc.aspx?sourcedoc=%7BB75E6E90-1715-43C8-965F-2C02DAF6DDED%7D&file=Long%20list%20backbone.docx&action=default&mobileredirect=true[the long list]. For the detailed evaluation of the six vendors mentioned below, see https://dormandode.sharepoint.com/:x:/r/sites/Replatformingsquad/_layouts/15/Doc.aspx?sourcedoc=%7B6980E826-29CA-4514-A661-2754236BCEF4%7D&file=Software%20evaluation%20backbone.xlsx&action=default&mobileredirect=true[the evaluation template].
+
+=== commercetools
+=== commercelayer
+=== Kibo
+=== BigCommerce
+BigCommerce is one of the biggest and most widely used e-commerce platforms in the market today. They were founded in 2009, have had a strong growth during the past years and did and IPO in 2019. They offer not only a backbone but also their own storefront, including both CMS and frontend. It is not a must to use their storefront though. An headless approach is supported, ie to bring a completely separate storefront.
+
+BigCommerce originally comes from a customer base of B2C focused SMEs, although they are keen to grow their market share within the enterprise segment, which is why they are heavily investing in both B2B and enterprise capabilities.
+
+==== Why it was discarded
+There is not one particular red flag which disqualifies BigCommerce, however, it scores slightly lower than the alternatives in most aspects. The most crucial ones being:
+
+* Weak support for bundles
+* Inflexible the data model (no support for custom objects, adding custom attributes is a new feature)
+* Inflexible promotions engine (promotion API only exists in closed beta)
+* Limited support for returns (returns API planned for Q4 2021)
+* Single-tenant platform meaning each market needs to be a separate instance
+* Not API-first (some functionality is not accessible through APIs)
+
+=== Sylius
+==== Why it was discarded
+* Monolith
+* Not API-first
+* Limited functionality for enterprises and B2B
+* Old tech stach (SQL, PHP)
+* New com
+
+=== Elastic Path
+==== Why it was discarded
+* They withdrew from the evaluation
+

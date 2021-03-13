@@ -12,6 +12,8 @@ import javax.ws.rs.GET
 import javax.ws.rs.Produces
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.Path as HttpPath
+import gg.jte.html.HtmlInterceptor
+import gg.jte.html.HtmlTemplateOutput
 
 @HttpPath("/test")
 class GreetingResource(
@@ -21,9 +23,18 @@ class GreetingResource(
     @GET
     @Produces(MediaType.TEXT_HTML)
     fun hello() : String {
-        val codeResolver: CodeResolver = DirectoryCodeResolver(Path.of("${System.getProperty("user.dir")}/classes/META-INF/resources")) // This is the directory where your .jte files are located.
+        var x : HtmlInterceptor? = null
+        var y : HtmlTemplateOutput? = null
+        val workingDir = System.getProperty("user.dir")
+        val codeResolver: CodeResolver = DirectoryCodeResolver(Path.of("${workingDir}/classes/META-INF/resources")) // This is the directory where your .jte files are located.
 
-        val templateEngine: TemplateEngine = TemplateEngine.create(codeResolver, ContentType.Html)
+//        val templateEngine: TemplateEngine = TemplateEngine.create(codeResolver, ContentType.Html)
+        val templateEngine: TemplateEngine = TemplateEngine.create(
+                codeResolver,
+                Path.of("${workingDir}/jte-classes"),
+                ContentType.Html,
+                Thread.currentThread().contextClassLoader
+        )
 
         val output: TemplateOutput = StringOutput()
         templateEngine.render("example1.jte", mapOf(), output)
